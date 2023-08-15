@@ -20,9 +20,9 @@ wrapper>div>img {
     width: 310px;
 }
 
-.Title{
+.tenSP{
     text-align: center;
-    font-size: 40px;
+    font-size: 20px;
     font-weight: bold;
 }
 
@@ -32,9 +32,8 @@ hr{
 
 .products_section {
     display: grid;
-    grid-template-columns: 23% 23% 23% 23%;
+    grid-template-columns: 23% 23% 23%;
     text-align: center;
-    justify-content: space-around;
     font-family: sans-serif;
     width: 85%;
     margin: auto;
@@ -96,6 +95,17 @@ button:hover {
 
 .button2{
     background-color: #198754;
+}
+
+.cart {
+    display: grid;
+    grid-template-columns: 10% 35% 15% 20% 20%;
+    width: 70%;
+    margin-left: 20px;
+}
+
+.col1 {
+    border: solid 1px black;;
 }
 
 @media screen and (max-width: 600px) {

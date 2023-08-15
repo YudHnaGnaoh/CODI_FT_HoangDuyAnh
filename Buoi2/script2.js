@@ -32,3 +32,31 @@ for (let i = 0; i < button2.length; i++) {
         console.log(arr)
     });
 }
+
+var bought = "";
+var number = 1;
+arr.forEach(el => {
+    var finalPayment = Number(el.gia)*el.soluong;
+    console.log(el.gia);
+    bought+= '
+    <div class="cart">
+    //em ko biết đoạn này bị sao
+        <div class="col1">
+            "+(number++)+"
+        </div>
+        <div class="col1">
+            "+el.ten+"
+        </div>
+        <div class="col1">
+            "+el.soluong+"
+        </div>
+        <div class="col1">
+            "+el.gia+"
+        </div>
+        <div class="col1">
+            "+finalPayment+"
+        </div></>
+    </div>
+    ';
+})
+document.getElementsByClassName("cart1").innerHTML=bought
