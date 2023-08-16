@@ -97,7 +97,7 @@ button:hover {
     background-color: #198754;
 }
 
-.cart {
+#cart {
     display: grid;
     grid-template-columns: 10% 35% 15% 20% 20%;
     width: 70%;

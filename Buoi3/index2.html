@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap5.1.css" />
+    <script src="js/bootstrap5.1.js"></script>
+    <script src="js/jquery3.7.js"></script>
+    <script>
+      $(document).ready(function() {
+        login()
+      })
+      function login(){
+        $("#loginBtn").click(function (e) {
+          e.preventDefault();
+          $("#loginModal").modal("show");
+          $("#submit").click(function (e) {
+            e.preventDefault();
+            var emailaddress = $("#email").val().trim();
+            if (email==""){
+              alert("Xin hãy điền thông tin email");
+            }
+            else(
+              $.ajax({
+                type: "post",
+                url: "https://students.trungthanhweb.com/api/checkLoginhtml",
+                data: {
+                  email: emailaddress
+                },
+                dataType: "JSON",
+                success: function (res) {
+                  if(res.check==true) {
+                    console.log(res.apitoken);
+                    localStorage.setItem("token",res.apitoken);
+                    alert("Đăng nhập ok :D");
+                    window.location.reload();
+                  }
+                  else[
+                    alert("Đánh sai email rùi :P")
+                  ]
+                  //bài của em không hiện ra bảng nhập chữ. 
+                  //mình có cần 1 script nữa ở dưới không nhỉ vì em nhớ là không có .
+                  //từ buổi sau em phải screen record thôi vì 2 buổi javascript đều làm bài không ra kết quả, thế này không theo được mất.
+                  //dọc code của thầy thì cũng hiểu đôi phần nhưng đến khi thực hành thì mù luôn ạ.
+                }
+              })
+            )
+          })
+        })
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="email">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submitloginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!--navbar-->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link loginBtn" href="#">Login</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <!--end of navbar-->
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <input type="text" id="todo" class="form-control" placeholder="to do"/>
+        </div>
+        <div class="col-md">
+          <button class="btn btn-primary w-100" id="addTodoBtn">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
