@@ -1,0 +1,23 @@
+.iphone{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.container{
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom: 10px;
+}
+
+footer>div>.row>h4 {
+    margin-top: 13%;
+}
+
+.card-img-top {
+    max-height: 250px !important;
+    width: auto;
+    margin: 20px auto;
+}

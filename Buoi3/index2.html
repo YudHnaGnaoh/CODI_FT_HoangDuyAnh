@@ -15,7 +15,7 @@
         $("#loginBtn").click(function (e) {
           e.preventDefault();
           $("#loginModal").modal("show");
-          $("#submit").click(function (e) {
+          $("#submitloginBtn").click(function (e) {
             e.preventDefault();
             var emailaddress = $("#email").val().trim();
             if (email==""){
@@ -39,10 +39,6 @@
                   else[
                     alert("Đánh sai email rùi :P")
                   ]
-                  //bài của em không hiện ra bảng nhập chữ. 
-                  //mình có cần 1 script nữa ở dưới không nhỉ vì em nhớ là không có .
-                  //từ buổi sau em phải screen record thôi vì 2 buổi javascript đều làm bài không ra kết quả, thế này không theo được mất.
-                  //dọc code của thầy thì cũng hiểu đôi phần nhưng đến khi thực hành thì mù luôn ạ.
                 }
               })
             )
@@ -83,7 +79,7 @@
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link loginBtn" href="#">Login</a>
+              <a class="nav-link" id="loginBtn" href="#">Login</a>
             </li>
           </ul>
           <form class="d-flex">
