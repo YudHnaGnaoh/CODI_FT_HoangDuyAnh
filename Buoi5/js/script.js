@@ -13,14 +13,30 @@ function login() {
     $("#submitloginBtn").click(function (e) {
       e.preventDefault();
       var emailaddress = $("#email").val().trim();
-      if (email == "") {
-        alert("Xin hãy điền thông tin email");
-      } else
+      if (emailaddress == '') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1700,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+
+        Toast.fire({
+          icon: 'warning',
+          title: 'Type something',
+        });
+      }
+      else (
         $.ajax({
           type: "post",
           url: "https://students.trungthanhweb.com/api/checkLoginhtml",
           data: {
-            email: emailaddress,
+            email: emailaddress
           },
           dataType: "JSON",
           success: function (res) {
@@ -28,53 +44,6 @@ function login() {
               console.log(res.apitoken);
               localStorage.setItem("token", res.apitoken);
               const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 1700,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener("mouseenter", Swal.stopTimer);
-                  toast.addEventListener("mouseleave", Swal.resumeTimer);
-                },
-              });
-
-              Toast.fire({
-                icon: "success",
-                title: "Login successfully",
-              }).then(() => {
-                window.location.reload();
-              });
-            } else {
-              const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener("mouseenter", Swal.stopTimer);
-                  toast.addEventListener("mouseleave", Swal.resumeTimer);
-                },
-              });
-
-              Toast.fire({
-                icon: "error",
-                title: "Fail to Signed in",
-              });
-            }
-          },
-        });
-    });
-  });
-}
-//-----------------space-------------------------------
-function logout() {
-    $("#logoutBtn").click(function (e) { 
-        e.preventDefault();
-        if (localStorage.getItem("token") && localStorage.getItem("token")!=null) {
-            localStorage.removeItem("token")
-            const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
@@ -85,15 +54,64 @@ function logout() {
                   toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
               })
-              
+
               Toast.fire({
                 icon: 'success',
-                title: 'Logout successfully'
-              }).then(()=> {
+                title: 'Signed in successfully'
+              }).then(() => {
                 window.location.reload();
+              });
+            }
+            else {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
               })
-        }
+
+              Toast.fire({
+                icon: 'error',
+                title: 'Email not exist'
+              })
+            }
+          }
+        })
+      )
     });
+  })
+}
+//------------------------------------------------------------------------------------
+function logout() {
+  $("#logoutBtn").click(function (e) {
+    e.preventDefault();
+    if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
+      localStorage.removeItem("token")
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1700,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+
+      Toast.fire({
+        icon: 'success',
+        title: 'Logout successfully'
+      }).then(() => {
+        window.location.reload();
+      })
+    }
+  });
 }
 //-----------------space-------------------------------
 function searchTodo() {
@@ -153,13 +171,12 @@ function loadTodo() {
   if (localStorage.getItem("token")&& localStorage.getItem("token") !=null) {
     $.ajax({
       type: "GET",
-      url: url+"home",
+      url: "https://students.trungthanhweb.com/api/home",
       data: {
         apitoken: localStorage.getItem("token")
       },
       dataType: "JSON",
       success: function (res) {
-        const
         
       }
     });
@@ -276,7 +293,7 @@ function checkbox() {
             denyButtonText: `Don't check`,
           }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire('Checked!', '', 'success')
+              
               $.ajax({
                 type: "post",
                 url: "https://students.trungthanhweb.com/api/statusTodo",
@@ -286,6 +303,9 @@ function checkbox() {
                 },
                 dataType: "JSON",
                 success: function (res) {
+                    if (res.check==true){
+                      Swal.fire('Checked!', '', 'success')
+                    }
                     
                 }
             });
@@ -315,7 +335,7 @@ function show() {
       },
       dataType: "JSON",
       success: function (res) {
-        console.log(res.todo);
+        //console.log(res.todo);
         const todo = res.todo;
         if (todo.length > 0) {
           var str = "";
@@ -342,7 +362,7 @@ function show() {
                 <td><input type="checkbox" data-id="` +el.id+`" disable checked class="finish"></td>
                 <td>
                     <div class="d-flex">
-                        <button class="btn-sm btn-warning editTodoBtn" disable data-id="` +el.id+`" data-value="`+el.note+`">Sửa</button>
+                        <button class="btn-sm btn-warning editTodoBtn" data-id="` +el.id+`" disable data-value="`+el.note+`">Sửa</button>
                         <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` +el.id+`" data-key="`+key+`">Xóa</button>
                     </div>
                 </td>

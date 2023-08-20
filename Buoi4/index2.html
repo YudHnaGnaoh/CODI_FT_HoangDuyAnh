@@ -456,7 +456,7 @@
     });
   }
     function loadData() {
-        if (localStorage.getItem("token")&& localStorage.getItem("token")!=null {
+        if (localStorage.getItem("token")&& localStorage.getItem("token")!=null) {
             $.ajax({
                 type: "GET",
                 url: url+"home",
@@ -475,18 +475,25 @@
                         });
                         $("brandUL").html(str);
                     }
-                    if (brands.length>0) {
+                    if (categories.length>0) {
                         var str=""
-                        brands.forEach(el => {
+                        categories.forEach(el => {
                             str+=`
                             <li><a class="dropdown-item" href="#">`+el.name+`</a></li>
                             `
                         });
                         $("#cateUL").html(str);
                     }
+                    if(products.length>0) {
+                      var str="";
+                      products.forEach(el => {
+                        str+=""
+                        
+                      });
+                    }
                 }
             });
-        })
+        }
     }
     </script>
   </body>
