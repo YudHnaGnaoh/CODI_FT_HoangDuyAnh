@@ -6,6 +6,7 @@
 
 .container{
     margin-top: 20px;
+    max-width: 1250px;
 }
 
 .card {
@@ -32,3 +33,30 @@ footer>div>.row>h4 {
 th:hover {
     color: aqua;
 }
+
+#productInfoTable {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #edd7fffa;
+}
+
+#content, #content2{
+    box-shadow: lightgray 2px 2px 2px 2px;
+    border-radius: 10px;
+}
+
+#content>p>span>span>img {
+width: 100%;
+}
+
+#owl {
+    box-shadow: lightgray 2px 2px 2px 2px;
+    border-radius: 7px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* #sameCateProducts>.owl-stage-outer>.owl-stage>.owl-item {
+    width: 150px !important;
+
+} */

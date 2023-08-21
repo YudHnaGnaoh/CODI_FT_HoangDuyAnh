@@ -1,7 +1,8 @@
 $(document).ready(function () {
-  login(); logout(); loadDataNavbar(); loadData(); showMore();
+  login();
+  logout(); loadDataNavbar();
+  getData();
 });
-///------------------------------------------------------------------------------------
 
 function login() {
   $("#loginBtn").click(function (e) {
@@ -111,10 +112,114 @@ function logout() {
   });
 }
 //------------------------------------------------------------------------------------
+function getData() {
+  const params = new URLSearchParams(window.location.search)
+  if (params.has("id")){
+    var id= params.get("id");
+  }
+  else {
+    window.location.replace("index.html")
+  }
+  
+  $.ajax({
+    type: "GET",
+    url: "https://students.trungthanhweb.com/api/single",
+    data: {
+      apitoken:localStorage.getItem("token"),
+      id: id,
+    },
+    dataType: "JSON",
+    success: function (res) {
+      const gallery= res.gallery;
+      var str=""
+      gallery.forEach(el => {
+        str+=`
+        <div class="item"><img class="pointer sliderimage" src="`+el+`" alt=""></div>
+        `
+        $("#owl").append(str);
+        str="";
+      });
+      const products = res.products[0];
+      var imageURL = "https://students.trungthanhweb.com/images/"
+      var image= imageURL + products.images;
+      $("#productimage").attr("src",image);
+      const name = products.name;
+      const discount = products.discount;
+      //(discounted) price = price - (discount*price)
+      //or price = price * (100-discount) %
+      const price = Intl.NumberFormat('en-US').format(products.price*(100-discount)/100);
+      const catename = products.catename;
+      const brandname = products.brandname;
+      $("#productname").text(name);
+      $("#discount").text(discount);
+      $("#price").text(price);
+      $("#catename").text(catename);
+      $("#brandname").text(brandname);
+      const content= products.content
+      $("#content").html(content);
+      const cateproduct = res.cateproducts;
+      const brandproducts = res.brandproducts;
+      console.log(brandproducts);
+      var str=""
+      brandproducts.forEach(el => {
+        str+=`
+        <div class="item">
+            <div class="card w-100">
+              <img src="`+(imageURL+el.image)+`" class="card-img-top" alt="..."/>
+              <div class="card-body">
+                <h5 class="card-title text-primary">`+ el.name +`</h5>
+                <p class="card-text">
+                  Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
+                  <p>Loại sản phẩm: `+ el.catename + `</p>
+                  <p>Thương hiệu: `+ el.brandname + `</p>
+                </p>
+                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+              </div>
+            </div>
+          </div>
+        `
+        $("#sameBrandProducts").append(str);
+        str="";
+      });
+      var str2=""
+      cateproduct.forEach(el => {
+        str2+=`
+        <div class="item">
+            <div class="card w-100">
+              <img src="`+(imageURL+el.image)+`" class="card-img-top" alt="..."/>
+              <div class="card-body">
+                <h5 class="card-title text-primary">`+ el.name +`</h5>
+                <p class="card-text">
+                  Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
+                  <p>Loại sản phẩm: `+ el.catename + `</p>
+                  <p>Thương hiệu: `+ el.brandname + `</p>
+                </p>
+                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+              </div>
+            </div>
+          </div>
+        `
+        $("#sameCateProducts").append(str2);
+        str2="";
+      
+    })
+    owl();clickimage();
+  }});
+}
+//------------------------------------------------------------------------------------
+function clickimage(){
+  $(".sliderimage").click(function (e) { 
+    e.preventDefault();
+    var src = $(this).attr("src")
+    $("#productimage").attr("src",src);
+  });
+}
+//------------------------------------------------------------------------------------
 function loadDataNavbar() {
   $("#logoutBtn").hide();
   if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
     $("#logoutBtn").show();
+    $("#loginBtn").hide()
     $.ajax({
       type: "GET",
       url: "https://students.trungthanhweb.com/api/home",
@@ -146,116 +251,42 @@ function loadDataNavbar() {
     }})}
 }
 //------------------------------------------------------------------------------------
-function loadData() {
-  if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
-       $("#xemThemBtn").click(function (e) { 
-        e.preventDefault();
-        showMore();
-       });
-  }
-}
-//------------------------------------------------------------------------------------
-var link="https://students.trungthanhweb.com/api/home"
-function showMore() {
-    $.ajax({
-        type: "GET",
-        url: link,
-        data: {
-          apitoken: localStorage.getItem("token"),
+function owl() {
+  $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:true,
+    responsive:{
+        0:{
+            items:1
         },
-        dataType: "JSON",
-        success: function (res) {
-          const products = res.products.data;
-          if (products.length > 0) {
-            var str = ""
-            products.forEach(el => {
-              str += `
-                      <div class="col-md-3 mb-3">
-            <div class="card">
-              <img
-                src="https://students.trungthanhweb.com/images/`+el.images+`"
-                class="card-img-top"
-                alt="..."
-              />
-              <div class="card-body">
-                <h5 class="card-title text-primary">`+ el.name + `</h5>
-                <p class="card-text">
-                  Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
-                  <p>Loại sản phẩm: `+ el.catename + `</p>
-                  <p>Thương hiệu: `+ el.brandname + `</p>
-                </p>
-                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
-                <a href="#" class="btn btn-success addToCartBtn" data-id=`+ el.id + `>Thêm</a>
-              </div>
-            </div>
-          </div>
-                      `
-            })
-            $("#resultProduct").append(str)
-            if (res.products.next_page_url!=null) {
-              link = res.products.next_page_url;
-            }
-            else {
-              $("#xemThemBtn").hide();
-            }
-            addToCart()
-          }
-  }});
-}
-//------------------------------------------------------------------------------------
-function addToCart(){
-  if (!localStorage.getItem("cart") || localStorage.getItem("cart") == null){
-    var arr=[];
-  }
-  else {
-    var cart = localStorage.getItem("cart")
-    var arr = JSON.parse(cart)
-  }
-  $(".addToCartBtn").click(function (e) { 
-    e.preventDefault();
-    var id = Number($(this).attr("data-id"));
-    var qty = 1;
-    var item = [id,qty];
-    var check = 0;
-    arr.forEach(el => {
-      if (el[0]==id){
-        el[1]++;
-        check = 1;
-      }
-    });
-    if (check==0){
-      arr.push(item)
-      
+        600:{
+            items:3
+        },
+        1000:{
+            items:2.5
+        }
     }
-    localStorage.setItem("cart", JSON.stringify(arr))
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
+})
+$('#sameCateProducts').owlCarousel({
+  loop:true,
+  margin:10,
+  responsiveClass:true,
+  items:6,
+  responsive:{
+    0:{
+      items:1,
+      nav:true
+  },
+  600:{
+      items:3,
+      nav:false
+  },
+  1000:{
+      items:5,
+      nav:true,
+      loop:false
       }
-    })
-    
-    Toast.fire({
-      icon: 'success',
-      title: 'Added to Cart'
-    })
-  });
+  }
+})
 }
-//------------------------------------------------------------------------------------
-function searchProduct() {
-  $("#searchProduct").keyup(function (e) {
-    e.preventDefault();
-    var name = $(this).val().trim();
-    if (name == "") {
-      loadData()
-    } else {
-      loadSearch(name)
-    }
-  });
-}
-//------------------------------------------------------------------------------------

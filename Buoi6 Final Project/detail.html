@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cart</title>
+    <title>Detail</title>
     <link rel="stylesheet" href="css/bootstrap5.1.css" />
     <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
     <script src="js/bootstrap5.1.js"></script>
     <script src="js/jquery3.7.js"></script>
     <script src="js/sweetalert2.js"></script>
-    <script src="js/script2.js"></script>
+    <script src="js/owl.carousel.js"></script>
   </head>
-  <body class="bg-dark">
+  <body>
     <!---------------------- Modal ------------------------------------->
     <div
       class="modal fade"
@@ -126,6 +127,64 @@
       </div>
     </nav>
     <!---------------------end of navbar--------------------------------------->
-    
+    <div class="container">
+      <div class="row w-100">
+        <div class="col-md-4" id="mainimg">
+          <img id="productimage" class="w-100" src="https://students.trungthanhweb.com/images/41373386.png" alt="">
+        </div>
+        <div class="col-md-4">
+          <div class="table-responsive">
+            <table class="table table-striped align-middle table-hover">
+              <tbody id="productInfoTable">
+                <tr class="">
+                  <td scope="row">Tên sản phảm</td>
+                  <td><span id="productname"></span></td>
+                </tr>
+                <tr class="">
+                  <td scope="row">Giảm giá</td>
+                  <td><span id="discount"></span></td>
+                </tr>
+                <tr class="">
+                  <td scope="row">Giá</td>
+                  <td><span id="price"></span></td>
+                </tr>
+                <tr class="">
+                  <td scope="row">Loại sản phẩm</td>
+                  <td><span id="catename"></span></td>
+                </tr>
+                <tr class="">
+                  <td scope="row">Thương hiệu</td>
+                  <td><span id="brandname"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+      <div class="row w-100">
+        <div class="col-md-4" >
+          <div class="owl-carousel owl-theme w=100" id="owl">
+            
+          </div>
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col-md-8" id="content">
+
+        </div>
+        <div class="col-md-4 contentrow" id="content2">
+          <h5>Sản phẩm cùng thương hiệu</h5>
+          <div class="row owl-carousel owl-theme" id="sameBrandProducts">
+            
+          </div>
+          <hr>
+          <h5>Sản phẩm cùng loại</h5>
+          <div class="row owl-carousel owl-theme" id="sameCateProducts">
+            
+        </div>
+      </div>
+    </div>
   </body>
+  <script src="js/detail.js"></script>
 </html>
