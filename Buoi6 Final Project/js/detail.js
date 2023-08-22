@@ -114,40 +114,40 @@ function logout() {
 //------------------------------------------------------------------------------------
 function getData() {
   const params = new URLSearchParams(window.location.search)
-  if (params.has("id")){
-    var id= params.get("id");
+  if (params.has("id")) {
+    var id = params.get("id");
   }
   else {
     window.location.replace("index.html")
   }
-  
+
   $.ajax({
     type: "GET",
     url: "https://students.trungthanhweb.com/api/single",
     data: {
-      apitoken:localStorage.getItem("token"),
+      apitoken: localStorage.getItem("token"),
       id: id,
     },
     dataType: "JSON",
     success: function (res) {
-      const gallery= res.gallery;
-      var str=""
+      const gallery = res.gallery;
+      var str = ""
       gallery.forEach(el => {
-        str+=`
-        <div class="item"><img class="pointer sliderimage" src="`+el+`" alt=""></div>
+        str += `
+        <div class="item"><img class="pointer sliderimage" src="`+ el + `" alt=""></div>
         `
         $("#owl").append(str);
-        str="";
+        str = "";
       });
       const products = res.products[0];
       var imageURL = "https://students.trungthanhweb.com/images/"
-      var image= imageURL + products.images;
-      $("#productimage").attr("src",image);
+      var image = imageURL + products.images;
+      $("#productimage").attr("src", image);
       const name = products.name;
       const discount = products.discount;
       //(discounted) price = price - (discount*price)
       //or price = price * (100-discount) %
-      const price = Intl.NumberFormat('en-US').format(products.price*(100-discount)/100);
+      const price = Intl.NumberFormat('en-US').format(products.price * (100 - discount) / 100);
       const catename = products.catename;
       const brandname = products.brandname;
       $("#productname").text(name);
@@ -155,63 +155,112 @@ function getData() {
       $("#price").text(price);
       $("#catename").text(catename);
       $("#brandname").text(brandname);
-      const content= products.content
+      //----------------------------------content left--------------------------------
+      const content = products.content
       $("#content").html(content);
+      $("#xemThemBtn").click(function (e) { 
+        e.preventDefault();
+        $("#content").toggleClass("hideContent", "showContent");
+        $("#xemThemBtn").hide();
+      });
+      //----------------------------------content right--------------------------------
       const cateproduct = res.cateproducts;
       const brandproducts = res.brandproducts;
-      console.log(brandproducts);
-      var str=""
+      var str = ""
       brandproducts.forEach(el => {
-        str+=`
+        str += `
         <div class="item">
             <div class="card w-100">
-              <img src="`+(imageURL+el.image)+`" class="card-img-top" alt="..."/>
+              <img src="`+ (imageURL + el.image) + `" class="card-img-top" alt="..."/>
               <div class="card-body">
-                <h5 class="card-title text-primary">`+ el.name +`</h5>
+                <h5 class="card-title text-primary">`+ el.name + `</h5>
                 <p class="card-text">
                   Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
                   <p>Loại sản phẩm: `+ el.catename + `</p>
                   <p>Thương hiệu: `+ el.brandname + `</p>
                 </p>
-                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+                <a href="detail.html?id=`+ el.id + `" class="btn btn-primary" data-id=` + el.id + `>Chi tiết</a>
               </div>
             </div>
           </div>
         `
         $("#sameBrandProducts").append(str);
-        str="";
+        str = "";
       });
-      var str2=""
+      var str = ""
       cateproduct.forEach(el => {
-        str2+=`
+        str += `
         <div class="item">
             <div class="card w-100">
-              <img src="`+(imageURL+el.image)+`" class="card-img-top" alt="..."/>
+              <img src="`+ (imageURL + el.image) + `" class="card-img-top w-100" alt="..."/>
               <div class="card-body">
-                <h5 class="card-title text-primary">`+ el.name +`</h5>
+                <h5 class="card-title text-primary">`+ el.name + `</h5>
                 <p class="card-text">
                   Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
                   <p>Loại sản phẩm: `+ el.catename + `</p>
                   <p>Thương hiệu: `+ el.brandname + `</p>
                 </p>
-                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+                <a href="detail.html?id=`+ el.id + `" class="btn btn-primary" data-id=` + el.id + `>Chi tiết</a>
               </div>
             </div>
           </div>
         `
-        $("#sameCateProducts").append(str2);
-        str2="";
-      
-    })
-    owl();clickimage();
+        $("#sameCateProducts").append(str);
+        str = "";
+
+      })
+      //----------------------------------add to cart btn--------------------------------
+      if (!localStorage.getItem("cart") || localStorage.getItem("cart") == null){
+        var arr=[];
+      }
+      else {
+        var cart = localStorage.getItem("cart")
+        var arr = JSON.parse(cart)
+      $(".addToCartBtn").click(function (e) { 
+        e.preventDefault();
+        var qty = 1;
+        var item = [id,qty];
+        var check = 0;
+        arr.forEach(el => {
+          if (el[0]==id){
+            el[1]++;
+            check = 1;
+          }
+        });
+        if (check==0){
+          arr.push(item)
+          
+        }
+        localStorage.setItem("cart", JSON.stringify(arr))
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1700,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        
+        Toast.fire({
+          icon: 'success',
+          title: 'Added to Cart'
+        })
+       
+      });
+      owl(); clickimage(); 
+      // addToCart();
+    }
   }});
 }
-//------------------------------------------------------------------------------------
-function clickimage(){
-  $(".sliderimage").click(function (e) { 
+//-------------------------------------------------------------------------------
+function clickimage() {
+  $(".sliderimage").click(function (e) {
     e.preventDefault();
     var src = $(this).attr("src")
-    $("#productimage").attr("src",src);
+    $("#productimage").attr("src", src);
   });
 }
 //------------------------------------------------------------------------------------
@@ -248,45 +297,58 @@ function loadDataNavbar() {
           });
           $("#cateUL").html(str);
         }
-    }})}
+      }
+    })
+  }
 }
 //------------------------------------------------------------------------------------
 function owl() {
-  $('.owl-carousel').owlCarousel({
-    loop:true,
-    margin:10,
-    nav:true,
-    responsive:{
-        0:{
-            items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:2.5
-        }
-    }
-})
-$('#sameCateProducts').owlCarousel({
-  loop:true,
-  margin:10,
-  responsiveClass:true,
-  items:6,
-  responsive:{
-    0:{
-      items:1,
-      nav:true
-  },
-  600:{
-      items:3,
-      nav:false
-  },
-  1000:{
-      items:5,
-      nav:true,
-      loop:false
+    $('#owl').owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    responsive: {
+      0: {
+        items: 2.5
+      },
+      600: {
+        items: 4.5
+      },
+      1000: {
+        items: 4.5
       }
-  }
-})
+    }
+  })
+  $('#sameBrandProducts').owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    responsive: {//pixel màn hình áp dụng cho các thiết bị xem
+      0: {
+        items: 2.5
+      },
+      600: {
+        items: 2.5
+      },
+      1000: {
+        items: 2.5
+      }
+    }
+  })
+  $('#sameCateProducts').owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    responsive: {//pixel màn hình áp dụng cho các thiết bị xem
+      0: {
+        items: 2.5
+      },
+      600: {
+        items: 2.5
+      },
+      1000: {
+        items: 2.5
+      }
+    }
+  })
 }

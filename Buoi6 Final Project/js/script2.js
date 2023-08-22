@@ -2,7 +2,6 @@ $(document).ready(function () {
   login(); logout(); loadDataNavbar(); loadData(); showMore();
 });
 ///------------------------------------------------------------------------------------
-
 function login() {
   $("#loginBtn").click(function (e) {
     e.preventDefault();
@@ -115,6 +114,7 @@ function loadDataNavbar() {
   $("#logoutBtn").hide();
   if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
     $("#logoutBtn").show();
+    $("#loginBtn").hide()
     $.ajax({
       type: "GET",
       url: "https://students.trungthanhweb.com/api/home",
@@ -232,7 +232,7 @@ function addToCart(){
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 3000,
+      timer: 1700,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -259,3 +259,4 @@ function searchProduct() {
   });
 }
 //------------------------------------------------------------------------------------
+
