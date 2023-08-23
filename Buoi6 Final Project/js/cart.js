@@ -130,7 +130,7 @@ function loadDataNavbar() {
                     var str = ""
                     brands.forEach(el => {
                         str += `
-                          <li><a class="dropdown-item" href="#">`+ el.name + `</a></li>
+                          <li><a class="dropdown-item" href="brand.html?id=`+ el.id + `">`+ el.name + `</a></li>
                           `
                     });
                     $("#brandUL").html(str);
@@ -139,7 +139,7 @@ function loadDataNavbar() {
                     var str = ""
                     categrories.forEach(el => {
                         str += `
-                          <li><a class="dropdown-item" href="#">`+ el.name + `</a></li>
+                          <li><a class="dropdown-item" href="cate.html?id=`+el.id+`">`+ el.name + `</a></li>
                           `
                     });
                     $("#cateUL").html(str);

@@ -129,7 +129,7 @@ function loadDataNavbar() {
           var str = ""
           brands.forEach(el => {
             str += `
-                        <li><a class="dropdown-item" href="#">`+ el.name + `</a></li>
+                        <li><a class="dropdown-item" href="brand.html?id=`+ el.id + `">`+ el.name + `</a></li>
                         `
           });
           $("#brandUL").html(str);
@@ -138,7 +138,7 @@ function loadDataNavbar() {
           var str = ""
           categrories.forEach(el => {
             str += `
-                        <li><a class="dropdown-item" href="#">`+ el.name + `</a></li>
+                        <li><a class="dropdown-item" href="cate.html?id=`+el.id+`">`+ el.name + `</a></li>
                         `
           });
           $("#cateUL").html(str);
@@ -171,24 +171,24 @@ function showMore() {
             products.forEach(el => {
               str += `
                       <div class="col-md-3 mb-3">
-            <div class="card">
-              <img
-                src="https://students.trungthanhweb.com/images/`+el.images+`"
-                class="card-img-top"
-                alt="..."
-              />
-              <div class="card-body">
-                <h5 class="card-title text-primary">`+ el.name + `</h5>
-                <p class="card-text">
-                  Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
-                  <p>Loại sản phẩm: `+ el.catename + `</p>
-                  <p>Thương hiệu: `+ el.brandname + `</p>
-                </p>
-                <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
-                <a href="#" class="btn btn-success addToCartBtn" data-id=`+ el.id + `>Thêm</a>
-              </div>
-            </div>
-          </div>
+                        <div class="card">
+                          <img
+                            src="https://students.trungthanhweb.com/images/`+el.images+`"
+                            class="card-img-top"
+                            alt="..."
+                          />
+                          <div class="card-body">
+                            <h5 class="card-title text-primary">`+ el.name + `</h5>
+                            <p class="card-text">
+                              Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
+                              <p>Loại sản phẩm: `+ el.catename + `</p>
+                              <p>Thương hiệu: `+ el.brandname + `</p>
+                            </p>
+                            <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+                            <a href="#" class="btn btn-success addToCartBtn" data-id=`+ el.id + `>Thêm</a>
+                          </div>
+                        </div>
+                      </div>
                       `
             })
             $("#resultProduct").append(str)
