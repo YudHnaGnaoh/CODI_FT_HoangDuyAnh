@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    login(); logout(); loadDataNavbar(); loadCart();
+    login(); logout(); loadDataNavbar(); loadCart(); checkout();
 });
 ///------------------------------------------------------------------------------------
 
@@ -151,6 +151,7 @@ function loadDataNavbar() {
 //------------------------------------------------------------------------------------
 function loadCart() {
     if (localStorage.getItem("cart") && localStorage.getItem("cart") != null) {
+        $(".empty").hide();
         var cart = localStorage.getItem("cart");
         var id = JSON.parse(cart);
         $.ajax({
@@ -190,18 +191,14 @@ function loadCart() {
                     }
                 }
                 else {
-                    str = `
-                    <div style="position: relative;margin-top: 100px">Giỏ hàng</div>
-                    <div>Trống rỗng</div>
-                    `
-                    $(".empty").html(str)
+                    location.replace("index.html")
                 }
                 editQuantity()
             },
         });
     }
 }
-//-----------------space-------------------------------
+//------------------------------------------------------------------------------------
 function editQuantity() {
     $(".qtyInput").change(function (e) {
         e.preventDefault();
@@ -243,4 +240,82 @@ function editQuantity() {
         loadCart()
     });
 }
+//------------------------------------------------------------------------------------
+function checkout() {
+    $("#checkOutBtn").click(function (e) { 
+        e.preventDefault();
+        $("#checkOutModal").modal("show");
+        const format = /(0[3\5\7\8\9])+([0-9]{8})\b/g
+        $("#checkoutNow").click(function (e) { 
+            e.preventDefault();
+            var username = $("#username").val();
+            var phonenumber = $("#phonenumber").val();
+            var address = $("#address").val();
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+            if (username == "") {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Please Fill In Your Name'
+                  })
+            }
+            else if (phonenumber == "") {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Please Fill In Your Phone Number'
+                  })
+            }
+            else if (address == "") {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Please Fill In Your Home Address'
+                  })
+            }
+            else if (!phonenumber.match(format)) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: "Phone Number Doesn't Fit Format"
+                  })
+            }
+            else {
+                $("#checkoutNow").attr("disabled","disabled");
+                var cart = JSON.parse(localStorage.getItem("cart"))
+                $.ajax({
+                    type: "post",
+                    url: "https://students.trungthanhweb.com/api/createBill",
+                    data: {
+                        tenKH:username,
+                        phone:phonenumber,
+                        address:address,
+                        cart:cart,
+                        api_token:localStorage.getItem("token"),
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.check=true) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: "Check Out Success"
+                              })
+                              .then(()=>{
+                                localStorage.removeItem("cart")
+                                window.location.replace("index.html")
+                              })
+                        }
+                    }
+                });
+            }
+        });
+    });
+}
+
 

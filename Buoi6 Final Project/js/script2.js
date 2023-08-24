@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  login(); logout(); loadDataNavbar(); loadData(); showMore();
+  login(); logout(); loadDataNavbar(); loadData(); showMore();searchProduct();
 });
 ///------------------------------------------------------------------------------------
 function login() {
@@ -146,6 +146,58 @@ function loadDataNavbar() {
     }})}
 }
 //------------------------------------------------------------------------------------
+function searchProduct() {
+  $("#searchProduct").keyup(function (e) {
+    e.preventDefault();
+    var name = $("#searchProduct").val().trim();
+    console.log(name);
+    if (name != null) {
+      $.ajax({
+        type: "GET",
+        url: "https://students.trungthanhweb.com/api/getSearchProducts",
+        data: {
+          apitoken:localStorage.getItem("token"),
+          name:name
+        },
+        dataType: "JSON",
+        success: function (res) {
+          if (res.check==true){
+            if (res.result.length>0) {
+              var str = ""
+              res.result.forEach(el => {
+              str += `
+                      <div class="col-md-3 mb-3">
+                        <div class="card">
+                          <img
+                            src="https://students.trungthanhweb.com/images/`+el.image+`"
+                            class="card-img-top"
+                            alt="..."
+                          />
+                          <div class="card-body">
+                            <h5 class="card-title text-primary">`+ el.name + `</h5>
+                            <p class="card-text">
+                              Giá: `+ Intl.NumberFormat('en-US').format(el.price) + `
+                              <p>Loại sản phẩm: `+ el.catename + `</p>
+                              <p>Thương hiệu: `+ el.brandname + `</p>
+                            </p>
+                            <a href="detail.html?id=`+el.id+`" class="btn btn-primary" data-id=`+ el.id + `>Chi tiết</a>
+                            <a href="#" class="btn btn-success addToCartBtn" data-id=`+ el.id + `>Thêm</a>
+                          </div>
+                        </div>
+                      </div>
+                      `
+            })
+            $("#resultProduct").html(str)
+            console.log(str);
+            $("#xemThemBtn").hide()
+            }
+          }
+        }
+      });
+    } 
+  });
+}
+//------------------------------------------------------------------------------------
 function loadData() {
   if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
        $("#xemThemBtn").click(function (e) { 
@@ -244,18 +296,6 @@ function addToCart(){
       icon: 'success',
       title: 'Added to Cart'
     })
-  });
-}
-//------------------------------------------------------------------------------------
-function searchProduct() {
-  $("#searchProduct").keyup(function (e) {
-    e.preventDefault();
-    var name = $(this).val().trim();
-    if (name == "") {
-      loadData()
-    } else {
-      loadSearch(name)
-    }
   });
 }
 //------------------------------------------------------------------------------------
