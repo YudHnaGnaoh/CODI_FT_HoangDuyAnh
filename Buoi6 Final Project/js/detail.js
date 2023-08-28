@@ -155,6 +155,11 @@ function getData() {
       $("#price").text(price);
       $("#catename").text(catename);
       $("#brandname").text(brandname);
+      var addToCartBtn=`
+        <button class="btn-success w-100 addToCartBtn" data-id="`+products.id+`" style="height: 40px;">Thêm vào cart</button>
+        `
+        $(".shoppingBtn").html(addToCartBtn);
+      
       //----------------------------------content left--------------------------------
       const content = products.content
       $("#content").html(content);
@@ -209,50 +214,8 @@ function getData() {
         str = "";
 
       })
-      //----------------------------------add to cart btn--------------------------------
-      if (!localStorage.getItem("cart") || localStorage.getItem("cart") == null){
-        var arr=[];
-      }
-      else {
-        var cart = localStorage.getItem("cart")
-        var arr = JSON.parse(cart)
-      $(".addToCartBtn").click(function (e) { 
-        e.preventDefault();
-        var qty = 1;
-        var item = [id,qty];
-        var check = 0;
-        arr.forEach(el => {
-          if (el[0]==id){
-            el[1]++;
-            check = 1;
-          }
-        });
-        if (check==0){
-          arr.push(item)
-          
-        }
-        localStorage.setItem("cart", JSON.stringify(arr))
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1700,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
-        })
-        
-        Toast.fire({
-          icon: 'success',
-          title: 'Added to Cart'
-        })
-       
-      });
       owl(); clickimage(); 
-      // addToCart();
-    }
+      addToCart();
   }});
 }
 //-------------------------------------------------------------------------------
@@ -351,4 +314,49 @@ function owl() {
       }
     }
   })
+}
+//------------------------------------------------------------------------------------
+function addToCart() {
+  if (!localStorage.getItem("cart") || localStorage.getItem("cart") == null) {
+      var arr = [];
+  }
+  else {
+      var cart = localStorage.getItem("cart")
+      var arr = JSON.parse(cart)
+  }
+  $(".addToCartBtn").click(function (e) {
+      e.preventDefault();
+      var id = Number($(this).attr("data-id"));
+      console.log(id);
+      var qty = 1;
+      var item = [id, qty];
+      var check = 0;
+      arr.forEach(el => {
+          if (el[0] == id) {
+              el[1]++;
+              check = 1;
+          }
+      });
+      if (check == 0) {
+          arr.push(item)
+
+      }
+      localStorage.setItem("cart", JSON.stringify(arr))
+      const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1700,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+      })
+
+      Toast.fire({
+          icon: 'success',
+          title: 'Added to Cart'
+      })
+  });
 }

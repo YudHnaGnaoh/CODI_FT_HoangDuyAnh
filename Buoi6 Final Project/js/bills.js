@@ -157,31 +157,70 @@ $(document).ready(function () {
             type: "GET",
             url: "https://students.trungthanhweb.com/api/bills",
             data: {
-                api_token: localStorage.getItem("token"),
+                apitoken: localStorage.getItem("token"),
             },
             dataType: "JSON",
             success: function (res) {
-                console.log(res);
-                console.log(res.bills);
-                if (res.check==true && res.bills.lenght>0){
-                    alert("good to go")
-
-                    //Đoạn này log res và res.bills đều chạy nhưng alert lại ko hoạt động ạ 
-
-
-                    // var str="";
-                    // const bills = res.bills
-                    // console.log(bills);
-                    // bills.forEach(el => {
-                    //     str+=`
-                    //     <li class="list-group-item list-group-item-action">`+el.tenKH+`</li>
-                    //     `
-                    // });
-                    // $("#bills").html(str);
-                    // console.log(str);
-                    // $("#bills").removeclass("hideclass");
+                if (res.check==true && res.bills.length>0){
+                    var str="";
+                    const bills = res.bills
+                    bills.forEach(el => {
+                        str+=`
+                        <li class="billsList list-group-item list-group-item-action" style="cursor: pointer" data-id="`+el.id+`">`+el.tenKH+`<br>`+el.created_at+`</li>
+                        `
+                    });
+                    $("#bills").html(str);
+                    $("#bills").removeClass("hideclass");
+                    billsdetail()
                 }
             }
         });
     }
+  }
+  //------------------------------------------------------------------------------------
+  function billsdetail() {
+    $(".billsList").click(function (e) { 
+      e.preventDefault();
+      $(".list-group-item").removeClass("active")
+      $(this).addClass("active")
+      var id = $(this).attr("data-id")
+      $.ajax({
+        type: "GET",
+        url: "https://students.trungthanhweb.com/api/singlebill",
+        data: {
+          apitoken: localStorage.getItem("token"),
+          id:id
+        },
+        dataType: "JSON",
+        success: function (res) {
+          const bills = res.result
+          console.log(res);
+          if (bills.length>0) {
+            var str="";
+            var sum = 0;
+            bills.forEach((el,index) => {
+              str+=`
+              <tr>
+                  <th scope="row">`+(index++)+`</th>
+                  <td> <img style="height: 130px; padding: 3px" src="https://students.trungthanhweb.com/images/`+el.image+`" alt=""></td>
+                  <td>`+el.productname+`</td>
+                  <td>`+Intl.NumberFormat('en-US').format(el.price)+`</td>
+                  <td>`+el.discount+`%</td>
+                  <td>`+el.qty+`</td>
+                  <td>`+Intl.NumberFormat('en-US').format(((el.price)*(el.qty))-((el.price)*(el.qty)*(el.discount)/100))+`</td>
+                </tr>
+              `
+              sum += ((el.price)*(el.qty))-((el.price)*(el.qty)*(el.discount)/100);
+            });
+            str += `
+            <tr style="font-weight: bold;font-size: 15px;">
+            <td colspan="6" style="font-size: 20px; ;text-align: left; padding-left: 20px;">Final payment</td>
+            <td colspan="1">`+ Intl.NumberFormat('en-US').format(sum) + `</td>
+            `
+            $("#billsDetailBody").html(str);
+            $("#billsDetail").removeClass("hideclass");
+          }
+        }
+      });
+    });
   }

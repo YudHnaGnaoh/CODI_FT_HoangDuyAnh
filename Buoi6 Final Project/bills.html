@@ -104,7 +104,7 @@
               aria-label="Search"
               id="searchProduct"
             />
-            <button class="btn btn-outline-success" type="submit">
+            <button class="btn btn-outline-success clearBtn" type="submit">
               Clear Search
             </button>
           </form>
@@ -112,7 +112,7 @@
       </div>
     </nav>
     <!---------------------end of navbar--------------------------------------->
-    <div class="container-xl mt-3">
+    <div class="container-xl mt-5">
       <div class="row">
         <div class="col-md-4">
           <ul class="list-group hideclass" id="bills">
@@ -120,7 +120,7 @@
           </ul>
         </div>
         <div class="col-md">
-          <div class="table-responsive hideclass" id="billdDetail">
+          <div class="table-responsive hideclass" id="billsDetail">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -128,17 +128,13 @@
                   <th scope="col">Image</th>
                   <th scope="col">Name</th>
                   <th scope="col">Price</th>
+                  <th scope="col">Discount</th>
                   <th scope="col">Amount</th>
-                  <th scope="col">Final Payment</th>
+                  <th scope="col">Total price</th>
                 </tr>
               </thead>
-              <tbody id="billdDetailBody">
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
+              <tbody id="billsDetailBody">
+                
               </tbody>
             </table>
           </div>
@@ -146,26 +142,6 @@
       </div>
     </div>
 
-    <footer class="row w-100 bg-dark text-light mt-5">
-      <div class="col-md-8">
-        <div class="row">
-          <h4 class="text-center">@ Hoàng Duy Anh</h4>
-        </div>
-      </div>
-      <div class="col-md">
-        <iframe
-          class="p-4"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7397.368957785469!2d106.81364439886346!3d10.840379293177014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBGUFQgVFAuIEhDTQ!5e0!3m2!1svi!2s!4v1691399952027!5m2!1svi!2s"
-          width="100%"
-          height="250px"
-          style="border: 0"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        >
-        </iframe>
-      </div>
-    </footer>
     <script src="js/bills.js"></script>
   </body>
 </html>

@@ -148,7 +148,10 @@ function loadDataNavbar() {
     }
 }
 //------------------------------------------------------------------------------------
-
+$(".clearBtn").click(function (e) { 
+    e.preventDefault();
+    window.location.reload()
+});
 //------------------------------------------------------------------------------------
 function getData() {
     const params = new URLSearchParams(window.location.search);
@@ -231,7 +234,7 @@ function searchPrice(id){
     var minPrice = $("#fromPrice").val();
     var maxPrice = $("#toPrice").val();
     var option = ""
-    if(minPrice==""&&maxPrice==""){
+    if(minPrice!=""&&maxPrice!=""){
         option = "pricebetween";
     }
     else if(minPrice==""&&maxPrice!=""){
@@ -278,7 +281,8 @@ function searchPrice(id){
                         </div>
                         `
                         $("#resultProduct").html(str)
-                        console.log(str);
+                        $("#pagination").hide();
+                        addToCart()
                     });
                 }
             });
@@ -319,8 +323,8 @@ function searchPrice(id){
                         </div>
                         `
                         $("#resultProduct").html(str)
-                        
-                        console.log(str);
+                        $("#pagination").hide();
+                        addToCart()
                     });
                 }
             });
@@ -361,6 +365,8 @@ function searchPrice(id){
                         </div>
                         `
                         $("#resultProduct").html(str)
+                        $("#pagination").hide();
+                        addToCart()
                     });
                 }
             });
@@ -455,6 +461,7 @@ function searchProduct() {
               })
               $("#resultProduct").html(str)
               $("#pagination").hide()
+              addToCart()
               }
             }
           }

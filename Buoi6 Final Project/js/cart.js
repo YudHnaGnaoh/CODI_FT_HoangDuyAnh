@@ -130,7 +130,7 @@ function loadDataNavbar() {
                     var str = ""
                     brands.forEach(el => {
                         str += `
-                          <li><a class="dropdown-item" href="brand.html?id=`+ el.id + `">`+ el.name + `</a></li>
+                          <li><a class="dropdown-item" href="brand.html?id=`+ el.id + `">` + el.name + `</a></li>
                           `
                     });
                     $("#brandUL").html(str);
@@ -139,7 +139,7 @@ function loadDataNavbar() {
                     var str = ""
                     categrories.forEach(el => {
                         str += `
-                          <li><a class="dropdown-item" href="cate.html?id=`+el.id+`">`+ el.name + `</a></li>
+                          <li><a class="dropdown-item" href="cate.html?id=`+ el.id + `">` + el.name + `</a></li>
                           `
                     });
                     $("#cateUL").html(str);
@@ -173,11 +173,12 @@ function loadCart() {
                         <td>`+ (++index) + `</td>
                         <td style="width: 200px"><img style="height: 100px; margin: 10px" src="`+ el[3] + `" alt="Image"></td>
                         <td>`+ el[1] + `</td>
+                        <td>`+ Intl.NumberFormat('en-US').format(el[5]) + `</td>
                         <td>`+ Intl.NumberFormat('en-US').format(el[2]) + `</td>
                         <td>
                         <input type="number" style="width:30%; text-align: center" class="qtyInput" value="`+ el[4] + `" data-id="` + el[0] + `"></td>
-                        <td>`+ Intl.NumberFormat('en-US').format(el[5]) + `</td>
-                        <td><button class="deleteBtn btn-sm btn-danger ms-2">Xóa</button><td>
+                        <td>`+ Intl.NumberFormat('en-US').format(el[6]) + `</td>
+                        <td><button class="deleteBtn btn-sm btn-danger ms-2" data-id="` + el[0] + `">Xóa</button><td>
                     </tr>
                     `;
                             sum += el[5];
@@ -185,7 +186,7 @@ function loadCart() {
                         str += `
                     <tr style="font-weight: bold;font-size: 20px;">
                     <td colspan="5" style=" text-align: left; padding-left: 20px;">Final payment</td>
-                    <td colspan="2">`+ Intl.NumberFormat('en-US').format(sum) + `</td>
+                    <td colspan="3" style=" text-align: right; padding-right: 70px;">`+ Intl.NumberFormat('en-US').format(sum) + `</td>
                     `
                         $("#cartTable").html(str);
                     }
@@ -193,7 +194,8 @@ function loadCart() {
                 else {
                     location.replace("index.html")
                 }
-                editQuantity()
+                editQuantity();
+                deleteBtn()
             },
         });
     }
@@ -226,6 +228,10 @@ function editQuantity() {
                 else if (result.isDenied) {
                     loadCart()
                 }
+                if (arr.length==0){
+                    localStorage.removeItem("cart")
+                    window.location.replace("index.html")
+                }
             })
         }
         else {
@@ -241,12 +247,63 @@ function editQuantity() {
     });
 }
 //------------------------------------------------------------------------------------
+function deleteBtn() {
+    $(".deleteBtn").click(function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Do you want to delete?",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Xóa",
+            denyButtonText: `Không xóa`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var id = $(this).attr("data-id");
+                var arr = []
+                var cart = JSON.parse(localStorage.getItem("cart"))
+                cart.forEach(el => {
+                    if (el[0] != id) {
+                        arr.push(el)
+                    }
+                });
+                if (arr.length==0){
+                    localStorage.removeItem("cart")
+                    window.location.replace("index.html")
+                }
+                else {
+                    localStorage.setItem("cart",JSON.stringify(arr))
+                }
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1700,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                  })
+                  
+                  Toast.fire({
+                    icon: 'success',
+                    title: 'Delete successfully'
+                  }).then(()=>{
+                    location.reload()
+                })
+            }
+            else {result.isDenied}
+        })
+    })
+
+}
+//------------------------------------------------------------------------------------
 function checkout() {
-    $("#checkOutBtn").click(function (e) { 
+    $("#checkOutBtn").click(function (e) {
         e.preventDefault();
         $("#checkOutModal").modal("show");
         const format = /(0[3\5\7\8\9])+([0-9]{8})\b/g
-        $("#checkoutNow").click(function (e) { 
+        $("#checkoutNow").click(function (e) {
             e.preventDefault();
             var username = $("#username").val();
             var phonenumber = $("#phonenumber").val();
@@ -258,58 +315,58 @@ function checkout() {
                 timer: 1700,
                 timerProgressBar: true,
                 didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-              })
+            })
             if (username == "") {
                 Toast.fire({
                     icon: 'warning',
                     title: 'Please Fill In Your Name'
-                  })
+                })
             }
             else if (phonenumber == "") {
                 Toast.fire({
                     icon: 'warning',
                     title: 'Please Fill In Your Phone Number'
-                  })
+                })
             }
             else if (address == "") {
                 Toast.fire({
                     icon: 'warning',
                     title: 'Please Fill In Your Home Address'
-                  })
+                })
             }
             else if (!phonenumber.match(format)) {
                 Toast.fire({
                     icon: 'warning',
                     title: "Phone Number Doesn't Fit Format"
-                  })
+                })
             }
             else {
-                $("#checkoutNow").attr("disabled","disabled");
+                $("#checkoutNow").attr("disabled", "disabled");
                 var cart = JSON.parse(localStorage.getItem("cart"))
                 $.ajax({
                     type: "post",
                     url: "https://students.trungthanhweb.com/api/createBill",
                     data: {
-                        tenKH:username,
-                        phone:phonenumber,
-                        address:address,
-                        cart:cart,
-                        api_token:localStorage.getItem("token"),
+                        tenKH: username,
+                        phone: phonenumber,
+                        address: address,
+                        cart: cart,
+                        apitoken: localStorage.getItem("token"),
                     },
                     dataType: "JSON",
                     success: function (res) {
-                        if (res.check=true) {
+                        if (res.check = true) {
                             Toast.fire({
                                 icon: 'success',
                                 title: "Check Out Success"
-                              })
-                              .then(()=>{
-                                localStorage.removeItem("cart")
-                                window.location.replace("index.html")
-                              })
+                            })
+                                .then(() => {
+                                    localStorage.removeItem("cart")
+                                    window.location.replace("index.html")
+                                })
                         }
                     }
                 });

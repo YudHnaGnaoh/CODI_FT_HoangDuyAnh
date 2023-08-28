@@ -146,6 +146,11 @@ function loadDataNavbar() {
     }})}
 }
 //------------------------------------------------------------------------------------
+$(".clearBtn").click(function (e) { 
+  e.preventDefault();
+  window.location.reload()
+});
+//------------------------------------------------------------------------------------
 function searchProduct() {
   $("#searchProduct").keyup(function (e) {
     e.preventDefault();
