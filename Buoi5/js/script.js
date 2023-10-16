@@ -115,60 +115,60 @@ function logout() {
 }
 //-----------------space-------------------------------
 function searchTodo() {
-  $("#searchInput").keyup(function (e) { 
+  $("#searchInput").keyup(function (e) {
     var todo = $(this).val().trim();
-    if (todo="") {
+    if (todo = "") {
       loadTodo()
     }
 
     else {
       $.ajax({
-      type: "post",
-      url: "https://students.trungthanhweb.com/api/searchtodo",
-      data: {
-        apitoken: localStorage.getItem("token"),
-        todo: todo
-      },
-      dataType: "JSON",
-      success: function (res) {
-        const todo= res.todo
-        if (todo.length>0) {
-          var str="";
-          todo.forEach((el,key) => {
-            if (el("status") ==0) {
-              str+=`
+        type: "post",
+        url: "https://students.trungthanhweb.com/api/searchtodo",
+        data: {
+          apitoken: localStorage.getItem("token"),
+          todo: todo
+        },
+        dataType: "JSON",
+        success: function (res) {
+          const todo = res.todo
+          if (todo.length > 0) {
+            var str = "";
+            todo.forEach((el, key) => {
+              if (el("status") == 0) {
+                str += `
               <tr class="table-primary">
-                <th scope="row">`+(key++)+`</th>
-                <td>>`+el("note")+`</td>
-                <td><input type="checkbox" data-id="` +el("id")+`" class="checkbox"></td>
+                <th scope="row">`+ (key++) + `</th>
+                <td>>`+ el("note") + `</td>
+                <td><input type="checkbox" data-id="` + el("id") + `" class="checkbox"></td>
                 <td>
-                        <button class="btn-sm btn-warning editTodoBtn" data-id="` +el("id")+`" data-value="`+el("note")+`">Sửa</button>
-                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` +el("id")+`" data-key="`+key+`">Xóa</button>
+                        <button class="btn-sm btn-warning editTodoBtn" data-id="` + el("id") + `" data-value="` + el("note") + `">Sửa</button>
+                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` + el("id") + `" data-key="` + key + `">Xóa</button>
                 </td>
               </tr>`;
-            } else {
-                str +=`
+              } else {
+                str += `
               <tr class="table-primary">
-                <th scope="row">`+(key++)+`</th>
-                <td>>`+el("note")+`</td>
-                <td><input type="checkbox" data-id="` +el("id")+`" class="checkbox"></td>
+                <th scope="row">`+ (key++) + `</th>
+                <td>>`+ el("note") + `</td>
+                <td><input type="checkbox" data-id="` + el("id") + `" class="checkbox"></td>
                 <td>
-                        <button class="btn-sm btn-warning editTodoBtn" data-id="` +el("id")+`" data-value="`+el("note")+`">Sửa</button>
-                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` +el("id")+`" data-key="`+key+`">Xóa</button>
+                        <button class="btn-sm btn-warning editTodoBtn" data-id="` + el("id") + `" data-value="` + el("note") + `">Sửa</button>
+                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` + el("id") + `" data-key="` + key + `">Xóa</button>
                 </td>
               </tr>`;
-              
-            }
-          }); 
+
+              }
+            });
+          }
         }
-      }
-    });
-  }
+      });
+    }
   });
 }
 //-----------------space-------------------------------
 function loadTodo() {
-  if (localStorage.getItem("token")&& localStorage.getItem("token") !=null) {
+  if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
     $.ajax({
       type: "GET",
       url: "https://students.trungthanhweb.com/api/home",
@@ -281,55 +281,55 @@ function createTodo() {
 }
 //-----------------space-------------------------------
 function checkbox() {
-    $(".finish").change(function (e) { 
-        e.preventDefault();
-        var id = $(this).attr("data-id")
-        Swal.fire({
-            title: 'Check the box?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: 'Check',
-            denyButtonText: `Don't check`,
-          }).then((result) => {
-            if (result.isConfirmed) {
-              
-              $.ajax({
-                type: "post",
-                url: "https://students.trungthanhweb.com/api/statusTodo",
-                data: {
-                    apitoken: localStorage.getItem("token"),
-                    id: id,
-                },
-                dataType: "JSON",
-                success: function (res) {
-                    if (res.check==true){
-                      Swal.fire('Checked!', '', 'success').then
-                    }
-                    else if (res.check == false) {
-                      const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 1700,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                          toast.addEventListener("mouseenter", Swal.stopTimer);
-                          toast.addEventListener("mouseleave", Swal.resumeTimer);
-                        },
-                      });
-        
-                      Toast.fire({
-                        icon: "error",
-                        title: "Not Deleted",
-                      });
-                    }
-                }
-            });
-            } else if (result.isDenied) {
-              Swal.fire('Not checked', '', 'info')
+  $(".finish").change(function (e) {
+    e.preventDefault();
+    var id = $(this).attr("data-id")
+    Swal.fire({
+      title: 'Check the box?',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Check',
+      denyButtonText: `Don't check`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        $.ajax({
+          type: "post",
+          url: "https://students.trungthanhweb.com/api/statusTodo",
+          data: {
+            apitoken: localStorage.getItem("token"),
+            id: id,
+          },
+          dataType: "JSON",
+          success: function (res) {
+            if (res.check == true) {
+              Swal.fire('Checked!', '', 'success')
             }
-          })
+            else if (res.check == false) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "error",
+                title: "Not Deleted",
+              });
+            }
+          }
+        });
+      } else if (result.isDenied) {
+        
+      }
     });
+  })
 }
 //-----------------space-------------------------------
 function show() {
@@ -338,11 +338,11 @@ function show() {
   //đoạn này em đang muốn khi login rồi (có token value) thì nut login sẽ biến mất, chỉ còn Logout thôi nhưng em chưa làm được ạ, canh có thời gian thì chi cho em nhé
   //$("#logintBtn").show();
   //if (!localStorage.getItem("token") || localStorage.getItem("token") == null) {
-    //$("#logintBtn").hide();}
-//-------------------------------------------------------------
+  //$("#logintBtn").hide();}
+  //-------------------------------------------------------------
   if (localStorage.getItem("token") && localStorage.getItem("token") != null) {
     $("#logoutBtn").show();
-    
+
     $.ajax({
       type: "get",
       url: "https://students.trungthanhweb.com/api/todo",
@@ -357,29 +357,29 @@ function show() {
           var str = "";
           var count = 1;
           todo.forEach((el, key) => {
-            if (el.status==0) {
-            str +=`
+            if (el.status == 0) {
+              str += `
               <tr>
-                <th scope="row">`+(count++)+`</th>
-                <td><p class="todo">`+el.note+`<p></td>
-                <td><input type="checkbox" data-id="` +el.id+`" class="finish"></td>
+                <th scope="row">`+ (count++) + `</th>
+                <td><p class="todo">`+ el.note + `<p></td>
+                <td><input type="checkbox" data-id="` + el.id + `" class="finish"></td>
                 <td>
                     <div class="d-flex">
-                        <button class="btn-sm btn-warning editTodoBtn" data-id="` +el.id+`" data-value="`+el.note+`">Sửa</button>
-                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` +el.id+`" data-key="`+key+`">Xóa</button>
+                        <button class="btn-sm btn-warning editTodoBtn" data-id="` + el.id + `" data-value="` + el.note + `">Sửa</button>
+                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` + el.id + `" data-key="` + key + `">Xóa</button>
                     </div>
                 </td>
               </tr>`;
             } else {
-                str +=`
+              str += `
               <tr>
-                <th scope="row">`+(count++)+`</th>
-                <td><p class="todo">`+el.note+`<p></td>
-                <td><input type="checkbox" data-id="` +el.id+`" disabled checked class="finish"></td>
+                <th scope="row">`+ (count++) + `</th>
+                <td><p class="todo">`+ el.note + `<p></td>
+                <td><input type="checkbox" data-id="` + el.id + `" disabled checked class="finish"></td>
                 <td>
                     <div class="d-flex">
-                        <button class="btn-sm btn-warning editTodoBtn" data-id="` +el.id+`" disabled data-value="`+el.note+`">Sửa</button>
-                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` +el.id+`" data-key="`+key+`">Xóa</button>
+                        <button class="btn-sm btn-warning editTodoBtn" data-id="` + el.id + `" disabled data-value="` + el.note + `">Sửa</button>
+                        <button class="btn-sm btn-danger ms-2 deletebtn" data-id="` + el.id + `" data-key="` + key + `">Xóa</button>
                     </div>
                 </td>
               </tr>`;
@@ -389,7 +389,7 @@ function show() {
           $("#todoTable").show();
         }
         deletetodo();
-        editTodo();checkbox();
+        editTodo(); checkbox();
       },
     });
   }
@@ -475,33 +475,33 @@ function editTodo() {
       var todo = $("#editTodo").val().trim();
       if (todo == "") {
         const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1700,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          })
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1700,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
         Toast.fire({
           icon: "error",
           title: "Chưa nhập todo",
         });
       } else if (todo == old) {
         const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1700,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          })
-          Toast.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1700,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        Toast.fire({
           icon: "error",
           title: "Chưa chỉnh sửa",
         });
@@ -517,18 +517,18 @@ function editTodo() {
           dataType: "JSON",
           success: function (res) {
             if (res.check == true) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1700,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                      toast.addEventListener('mouseenter', Swal.stopTimer)
-                      toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                  })
-                Toast.fire({
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              Toast.fire({
                 icon: "success",
                 title: "Đã chỉnh sửa",
               }).then(() => {
@@ -536,34 +536,34 @@ function editTodo() {
               });
             }
             if (res.msg.apitoken) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1700,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                      toast.addEventListener('mouseenter', Swal.stopTimer)
-                      toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                  })
-                Toast.fire({
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              Toast.fire({
                 icon: "error",
                 title: res.msg.apitoken,
               });
             } else if (res.msg.todo) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1700,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                      toast.addEventListener('mouseenter', Swal.stopTimer)
-                      toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                  })
-                Toast.fire({
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1700,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              Toast.fire({
                 icon: "error",
                 title: res.msg.todo,
               });
